@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>React AJAX</title>
+<script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+<script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+<script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+<script src="https://cdn.staticfile.org/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+<div id="example"></div>
+
+<script type="text/babel">
+class Users extends React.Component {
+  constructor(props) {
+      super(props);
+      this.state = {username: '用户', html_url: '链接'};
+  }
+
+ 
+  componentDidMount() {
+    this.serverRequest = $.get(this.props.source, function (result) {
+      this.setState({
+        username: result.login,
+        html_url: result.html_url
+      });
+    }.bind(this));
+  }
+ 
+  componentWillUnmount() {
+    this.serverRequest.abort();
+  }
+ 
+  render() {
+    return (
+      <div>
+        {this.state.username} 用户最新的 GitHub 地址：
+        <a href={this.state.html_url}>{this.state.html_url}</a>
+      </div>
+    );
+  }
+}
+ 
+ReactDOM.render(
+  <Users source="https://api.github.com/users/wuguangnuo" />,
+  document.getElementById('example')
+);
+</script>
+
+</body>
+</html>
